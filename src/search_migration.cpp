@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-#include "dgm/migrate.hpp"
+#include "resgraph/migrate.hpp"
 
 #include <algorithm>
 #include <chrono>
@@ -18,7 +18,7 @@
 #include "neighbor_selection.hpp"
 #include "parallel.hpp"
 
-namespace dgm {
+namespace resgraph {
 namespace {
 
 struct SearchScratch {
@@ -52,26 +52,26 @@ ValidateInputs(const Graph& graph, const EmbeddingSpace& space, const SearchConf
     }
     if (config.max_degree == 0 || config.beam_width == 0 || config.max_hops == 0 ||
         config.work_block_size == 0) {
-        throw std::invalid_argument("DGM-Search size parameters must be positive");
+        throw std::invalid_argument("ResGraph-Search size parameters must be positive");
     }
     if (config.beam_width < config.max_degree) {
-        throw std::invalid_argument("DGM-Search beam width must be at least max degree");
+        throw std::invalid_argument("ResGraph-Search beam width must be at least max degree");
     }
     if (config.max_hops > 254) {
-        throw std::invalid_argument("DGM-Search supports at most 254 hops");
+        throw std::invalid_argument("ResGraph-Search supports at most 254 hops");
     }
     if (!(config.diversity_factor > 0.0F) || !std::isfinite(config.diversity_factor)) {
-        throw std::invalid_argument("DGM-Search diversity factor must be finite and positive");
+        throw std::invalid_argument("ResGraph-Search diversity factor must be finite and positive");
     }
     if (!graph.empty() && config.entry_point >= graph.size()) {
-        throw std::invalid_argument("DGM-Search entry point is outside the graph");
+        throw std::invalid_argument("ResGraph-Search entry point is outside the graph");
     }
 }
 
 }  // namespace
 
 MigrationResult
-RunDgmSearch(const Graph& starting_graph,
+RunResGraphSearch(const Graph& starting_graph,
              const EmbeddingSpace& new_space,
              const SearchConfig& config) {
     ValidateInputs(starting_graph, new_space, config);
@@ -232,4 +232,4 @@ RunDgmSearch(const Graph& starting_graph,
     return {std::move(graph), stats};
 }
 
-}  // namespace dgm
+}  // namespace resgraph

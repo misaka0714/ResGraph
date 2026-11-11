@@ -9,7 +9,7 @@
 
 #include "parallel.hpp"
 
-namespace dgm::internal {
+namespace resgraph::internal {
 namespace {
 
 std::vector<NodeId>
@@ -107,4 +107,4 @@ PackedSignatures::agreement(NodeId lhs, NodeId rhs) const noexcept {
     return static_cast<std::int32_t>(score);
 }
 
-}  // namespace dgm::internal
+}  // namespace resgraph::internal

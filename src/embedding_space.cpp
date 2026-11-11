@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-#include "dgm/embedding_space.hpp"
+#include "resgraph/embedding_space.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -9,7 +9,7 @@
 
 #include "parallel.hpp"
 
-namespace dgm {
+namespace resgraph {
 
 EmbeddingSpace::EmbeddingSpace(const float* values,
                                std::size_t row_count,
@@ -102,4 +102,4 @@ EmbeddingSpace::distance(NodeId lhs, NodeId rhs) const {
     return static_cast<float>(1.0 - std::clamp(similarity, -1.0, 1.0));
 }
 
-}  // namespace dgm
+}  // namespace resgraph

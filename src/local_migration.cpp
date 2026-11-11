@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-#include "dgm/migrate.hpp"
+#include "resgraph/migrate.hpp"
 
 #include <algorithm>
 #include <chrono>
@@ -16,7 +16,7 @@
 #include "packed_signatures.hpp"
 #include "parallel.hpp"
 
-namespace dgm {
+namespace resgraph {
 namespace {
 
 struct SignCandidate {
@@ -50,17 +50,17 @@ ValidateInputs(const Graph& graph, const EmbeddingSpace& space, const LocalConfi
     }
     if (config.max_degree == 0 || config.shortlist_size == 0 ||
         config.calibration_sample_size == 0 || config.work_block_size == 0) {
-        throw std::invalid_argument("DGM-Local size parameters must be positive");
+        throw std::invalid_argument("ResGraph-Local size parameters must be positive");
     }
     if (!(config.diversity_factor > 0.0F) || !std::isfinite(config.diversity_factor)) {
-        throw std::invalid_argument("DGM-Local diversity factor must be finite and positive");
+        throw std::invalid_argument("ResGraph-Local diversity factor must be finite and positive");
     }
 }
 
 }  // namespace
 
 MigrationResult
-RunDgmLocal(const Graph& old_graph,
+RunResGraphLocal(const Graph& old_graph,
             const EmbeddingSpace& new_space,
             const LocalConfig& config) {
     ValidateInputs(old_graph, new_space, config);
@@ -175,4 +175,4 @@ RunDgmLocal(const Graph& old_graph,
     return {Graph(std::move(output)), stats};
 }
 
-}  // namespace dgm
+}  // namespace resgraph

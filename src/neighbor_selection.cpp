@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-namespace dgm::internal {
+namespace resgraph::internal {
 
 std::vector<NodeId>
 SelectDiverseNeighbors(const std::vector<Candidate>& sorted_candidates,
@@ -54,4 +54,4 @@ SelectDiverseNeighbors(const std::vector<Candidate>& sorted_candidates,
     return selected;
 }
 
-}  // namespace dgm::internal
+}  // namespace resgraph::internal

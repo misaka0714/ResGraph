@@ -1,8 +1,8 @@
-# DGM-Implement
+# ResGraph
 
 This repository contains a standalone C++17 implementation of the algorithms
 introduced in **Cross-Model Index Migration for Approximate Nearest Neighbor
-Search**. It is intended for reading, integration, and extension of DGM itself.
+Search**. It is intended for reading, integration, and extension of ResGraph itself.
 
 ## Problem Background and Intuition
 
@@ -14,7 +14,7 @@ stored vectors therefore leaves search evaluating new-model distances while
 traversing edges chosen in the old space, which can lead to stale
 neighborhoods and false local optima.
 
-DGM is motivated by an empirical property of the old topology that we call
+ResGraph is motivated by an empirical property of the old topology that we call
 **residual reachability**. The old and new embedding spaces need not be
 coordinate-aligned or geometrically compatible, but both models encode the
 same ID-paired objects and may preserve part of the similarity relations among
@@ -25,7 +25,7 @@ short path in the old graph.
 
 Residual reachability concerns the availability of useful candidates, not the
 validity of inherited edges under the new metric. Old-model rankings and
-construction geometry can both degrade after a model switch, so DGM treats
+construction geometry can both degrade after a model switch, so ResGraph treats
 the old topology only as a candidate-discovery substrate. Exact new-model
 distances validate the candidates and determine every output adjacency list.
 This separation provides the central intuition for graph-index migration: reuse
@@ -35,11 +35,11 @@ space.
 
 ## Algorithms
 
-- **DGM-Local** reads an immutable input graph, forms a deduplicated two-hop
+- **ResGraph-Local** reads an immutable input graph, forms a deduplicated two-hop
   pool for each node, shortlists candidates with packed new-space sign
   signatures, restores every inherited one-hop neighbor to the exact candidate
   set, and performs exact distance ordering and diversity-aware selection.
-- **DGM-Search** starts from either a vector-replacement graph or a DGM-Local
+- **ResGraph-Search** starts from either a vector-replacement graph or a ResGraph-Local
   graph. For each node it runs a new-space beam traversal whose width and hop
   depth are bounded independently, then selects a new adjacency list from the
   retained candidates.
@@ -52,41 +52,41 @@ operation independently for each stored layer.
 
 The library has three input types:
 
-- `dgm::Graph`: an in-memory adjacency list, constructible directly or from
+- `resgraph::Graph`: an in-memory adjacency list, constructible directly or from
   CSR arrays;
-- `dgm::EmbeddingSpace`: a non-owning row-major `float32` matrix with cosine
+- `resgraph::EmbeddingSpace`: a non-owning row-major `float32` matrix with cosine
   or squared-L2 distance; and
-- `dgm::LocalConfig` / `dgm::SearchConfig`: typed algorithm controls.
+- `resgraph::LocalConfig` / `resgraph::SearchConfig`: typed algorithm controls.
 
 The embedding row index and graph node ID must refer to the same object.
 The embedding buffer must remain alive while `EmbeddingSpace` is in use.
 
 ```cpp
-#include <dgm/dgm.hpp>
+#include <resgraph/resgraph.hpp>
 
-std::vector<dgm::Graph::AdjacencyList> adjacency = LoadAdjacency();
+std::vector<resgraph::Graph::AdjacencyList> adjacency = LoadAdjacency();
 std::vector<float> target_vectors = LoadTargetEmbeddings();
 
-dgm::Graph old_graph(std::move(adjacency));
-dgm::EmbeddingSpace target_space(
-    target_vectors.data(), old_graph.size(), dimensions, dgm::Metric::kCosine);
+resgraph::Graph old_graph(std::move(adjacency));
+resgraph::EmbeddingSpace target_space(
+    target_vectors.data(), old_graph.size(), dimensions, resgraph::Metric::kCosine);
 
-dgm::LocalConfig local_config;
-auto local = dgm::RunDgmLocal(old_graph, target_space, local_config);
+resgraph::LocalConfig local_config;
+auto local = resgraph::RunResGraphLocal(old_graph, target_space, local_config);
 
-dgm::SearchConfig search_config;
-auto refined = dgm::RunDgmSearch(local.graph, target_space, search_config);
+resgraph::SearchConfig search_config;
+auto refined = resgraph::RunResGraphSearch(local.graph, target_space, search_config);
 ```
 
 `MigrationResult` contains the migrated graph and lightweight work counters.
-DGM-Local is snapshot-based and deterministic for fixed inputs and seed.
-DGM-Search follows the paper's asynchronous update semantics: workers may read
+ResGraph-Local is snapshot-based and deterministic for fixed inputs and seed.
+ResGraph-Search follows the paper's asynchronous update semantics: workers may read
 lists repaired earlier in the same pass, so parallel execution order can affect
 the final graph.
 
 ## Preparing Datasets and Embeddings
 
-DGM does not redistribute datasets or model checkpoints. The following are the
+ResGraph does not redistribute datasets or model checkpoints. The following are the
 source pages and checkpoint identifiers used for the paper workloads. Hugging
 Face datasets can be obtained with `datasets.load_dataset`, and linked model
 identifiers can be passed to the loading API documented on each model card.
@@ -115,9 +115,9 @@ Prepare an old graph and its replacement embedding matrix as follows:
    pooling rule.
 3. Build or load the input graph using the old embeddings. Store the new
    embeddings as a contiguous, row-major `float32` matrix in the same object-ID
-   order, then pass that matrix to `dgm::EmbeddingSpace`.
+   order, then pass that matrix to `resgraph::EmbeddingSpace`.
 4. Select the distance metric used for the target embedding space. Explicit
-   L2 normalization is optional for `dgm::Metric::kCosine` because the library
+   L2 normalization is optional for `resgraph::Metric::kCosine` because the library
    computes vector norms, although model-prescribed normalization should still
    be retained.
 
@@ -142,26 +142,26 @@ ctest --test-dir build --output-on-failure
 Run the small in-memory example with:
 
 ```bash
-./build/dgm_minimal
+./build/resgraph_minimal
 ```
 
 ## Layout
 
 ```text
-include/dgm/              Public API
-src/local_migration.cpp   DGM-Local
-src/search_migration.cpp  DGM-Search
+include/resgraph/              Public API
+src/local_migration.cpp   ResGraph-Local
+src/search_migration.cpp  ResGraph-Search
 src/packed_signatures.cpp Packed sign screening
 src/neighbor_selection.cpp Exact diversity-aware selection
 examples/minimal.cpp      In-memory integration example
-tests/dgm_test.cpp        Algorithm and API tests
+tests/resgraph_test.cpp        Algorithm and API tests
 ```
 
 ## Scope
 
 This package deliberately leaves index serialization, vector storage, query
 serving, and hierarchical-layer orchestration to the host ANN system. That
-keeps the algorithm boundary explicit and avoids coupling DGM to an experiment
+keeps the algorithm boundary explicit and avoids coupling ResGraph to an experiment
 file format or a particular graph-index implementation.
 
 ## License

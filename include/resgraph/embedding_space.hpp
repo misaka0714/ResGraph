@@ -5,9 +5,9 @@
 #include <cstddef>
 #include <vector>
 
-#include "dgm/types.hpp"
+#include "resgraph/types.hpp"
 
-namespace dgm {
+namespace resgraph {
 
 // A non-owning row-major embedding matrix with precomputed cosine norms.
 // The caller must keep `values` alive for the lifetime of this object.
@@ -33,4 +33,4 @@ private:
     std::vector<float> inverse_norms_;
 };
 
-}  // namespace dgm
+}  // namespace resgraph

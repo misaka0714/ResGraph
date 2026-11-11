@@ -4,9 +4,9 @@
 
 #include <cmath>
 
-#include "dgm/types.hpp"
+#include "resgraph/types.hpp"
 
-namespace dgm::internal {
+namespace resgraph::internal {
 
 struct Candidate {
     float distance;
@@ -31,4 +31,4 @@ struct CandidateGreaterComparator {
     }
 };
 
-}  // namespace dgm::internal
+}  // namespace resgraph::internal

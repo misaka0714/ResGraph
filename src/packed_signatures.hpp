@@ -6,9 +6,9 @@
 #include <cstdint>
 #include <vector>
 
-#include "dgm/embedding_space.hpp"
+#include "resgraph/embedding_space.hpp"
 
-namespace dgm::internal {
+namespace resgraph::internal {
 
 class PackedSignatures {
 public:
@@ -25,4 +25,4 @@ private:
     std::vector<std::uint64_t> words_;
 };
 
-}  // namespace dgm::internal
+}  // namespace resgraph::internal

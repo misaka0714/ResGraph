@@ -11,7 +11,7 @@
 #include <utility>
 #include <vector>
 
-namespace dgm::internal {
+namespace resgraph::internal {
 
 inline std::size_t
 ResolveThreadCount(std::size_t requested, std::size_t item_count, std::size_t block_size) {
@@ -76,4 +76,4 @@ ParallelFor(std::size_t item_count,
     }
 }
 
-}  // namespace dgm::internal
+}  // namespace resgraph::internal

@@ -5,11 +5,11 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "dgm/embedding_space.hpp"
-#include "dgm/graph.hpp"
-#include "dgm/types.hpp"
+#include "resgraph/embedding_space.hpp"
+#include "resgraph/graph.hpp"
+#include "resgraph/types.hpp"
 
-namespace dgm {
+namespace resgraph {
 
 struct LocalConfig {
     std::size_t max_degree{64};
@@ -36,15 +36,15 @@ struct MigrationResult {
     MigrationStats stats;
 };
 
-// Runs the immutable two-hop migration pass described as DGM-Local.
-[[nodiscard]] MigrationResult RunDgmLocal(const Graph& old_graph,
+// Runs the immutable two-hop migration pass described as ResGraph-Local.
+[[nodiscard]] MigrationResult RunResGraphLocal(const Graph& old_graph,
                                           const EmbeddingSpace& new_space,
                                           const LocalConfig& config = {});
 
 // Runs one asynchronous hop-bounded beam-refinement pass described as
-// DGM-Search. The input may be a vector-replacement graph or a DGM-Local graph.
-[[nodiscard]] MigrationResult RunDgmSearch(const Graph& starting_graph,
+// ResGraph-Search. The input may be a vector-replacement graph or a ResGraph-Local graph.
+[[nodiscard]] MigrationResult RunResGraphSearch(const Graph& starting_graph,
                                            const EmbeddingSpace& new_space,
                                            const SearchConfig& config = {});
 
-}  // namespace dgm
+}  // namespace resgraph

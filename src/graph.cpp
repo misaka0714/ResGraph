@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
-#include "dgm/graph.hpp"
+#include "resgraph/graph.hpp"
 
 #include <limits>
 #include <stdexcept>
 #include <utility>
 
-namespace dgm {
+namespace resgraph {
 namespace {
 
 void
@@ -90,4 +90,4 @@ Graph::csr_neighbors() const {
     return neighbors;
 }
 
-}  // namespace dgm
+}  // namespace resgraph

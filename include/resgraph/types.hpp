@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace dgm {
+namespace resgraph {
 
 using NodeId = std::uint32_t;
 
@@ -23,4 +23,4 @@ struct MigrationStats {
     double elapsed_seconds{0.0};
 };
 
-}  // namespace dgm
+}  // namespace resgraph

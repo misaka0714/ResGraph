@@ -6,16 +6,16 @@
 #include <cstdint>
 #include <vector>
 
-#include "dgm/types.hpp"
+#include "resgraph/types.hpp"
 
-namespace dgm {
+namespace resgraph {
 
 class EmbeddingSpace;
 class Graph;
 struct MigrationResult;
 struct SearchConfig;
 
-MigrationResult RunDgmSearch(const Graph& starting_graph,
+MigrationResult RunResGraphSearch(const Graph& starting_graph,
                              const EmbeddingSpace& new_space,
                              const SearchConfig& config);
 
@@ -37,9 +37,9 @@ public:
 
 private:
     friend struct MigrationResult;
-    friend MigrationResult RunDgmSearch(const Graph&, const EmbeddingSpace&, const SearchConfig&);
+    friend MigrationResult RunResGraphSearch(const Graph&, const EmbeddingSpace&, const SearchConfig&);
 
     std::vector<AdjacencyList> adjacency_;
 };
 
-}  // namespace dgm
+}  // namespace resgraph
