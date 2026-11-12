@@ -157,13 +157,6 @@ examples/minimal.cpp      In-memory integration example
 tests/resgraph_test.cpp        Algorithm and API tests
 ```
 
-## Scope
-
-This package deliberately leaves index serialization, vector storage, query
-serving, and hierarchical-layer orchestration to the host ANN system. That
-keeps the algorithm boundary explicit and avoids coupling ResGraph to an experiment
-file format or a particular graph-index implementation.
-
 ## License
 
 Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
