@@ -39,7 +39,7 @@ export BIN=<vsag-tree>/build-release/tools/eval
 export DATASET_DIR=work/yelp_650k_768
 mkdir -p $DATASET_DIR/{configs,indexes,results}
 
-for f in 01_build_baseline 03_refine_drift_sign 04_search_sweep 05_refine_nsw_research; do
+for f in 01_build_baseline 03_refine_resgraph_local 04_search_sweep 05_refine_resgraph_search; do
   sed -e "s#<DATASET_DIR>#$PWD/$DATASET_DIR#g" \
       -e "s#<DIM>#768#g" \
       -e "s#<OLD_SPACE_H5>#$PWD/data/yelp_distilroberta.h5#g" \
@@ -63,7 +63,7 @@ Refine runs on a copy of the baseline index and writes `..._refined`:
 
 ```bash
 cp $DATASET_DIR/indexes/baseline_index $DATASET_DIR/indexes/resgraph_local_index
-$BIN/refine_index $DATASET_DIR/configs/03_refine_drift_sign.yaml \
+$BIN/refine_index $DATASET_DIR/configs/03_refine_resgraph_local.yaml \
   > $DATASET_DIR/results/resgraph_local_refine.log 2>&1
 ```
 
@@ -74,12 +74,12 @@ never refine on top of a previous run's leftovers.
 ### 3. ResGraph-Search chain (optional)
 
 Chains a second refine on top of the ResGraph-Local output (typical chain
-values `nsw_research_ef: "64"`, then `"100"`):
+values `refine_search_ef: "64"`, then `"100"`):
 
 ```bash
 cp $DATASET_DIR/indexes/resgraph_local_index_refined \
    $DATASET_DIR/indexes/resgraph_search_index
-$BIN/refine_index $DATASET_DIR/configs/05_refine_nsw_research.yaml \
+$BIN/refine_index $DATASET_DIR/configs/05_refine_resgraph_search.yaml \
   > $DATASET_DIR/results/resgraph_search_refine.log 2>&1
 ```
 
@@ -124,11 +124,10 @@ count for the variant.
 
 ## Scope-control rules
 
-The stage commands above are intentionally manual. Two discipline rules stand
-in for driver flags used during the paper runs:
+The stage commands above are intentionally manual. Two discipline rules keep
+reruns clean:
 
-- *Refine-only rerun* (the `--skip-search` pattern): run stages 1–2, skip
-  stage 4, when re-measuring migration cost.
-- *Force-clean refine rerun* (the `--force-local-refine` pattern): delete
-  `indexes/resgraph_local_index*` and the old refine logs before re-running
-  stage 2 so no cached artifact survives.
+- *Refine-only rerun*: run stages 1-2 and skip stage 4 when re-measuring
+  migration cost.
+- *Force-clean refine rerun*: delete `indexes/resgraph_local_index*` and the
+  old refine logs before re-running stage 2 so no cached artifact survives.

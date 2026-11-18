@@ -1,0 +1,24 @@
+# Stage 3 (optional chain) - ResGraph-Search refinement on top of a
+# ResGraph-Local index.
+#
+# Input index is the "..._refined" file produced by 03_refine_resgraph_local.yaml.
+# ResGraph-Search walks the migrated graph with each node's new vector in a
+# bounded beam traversal to gather additional candidates, then prunes with
+# exact distances. Typical chain runs use ef=64 and ef=100 for <SEARCH_EF>.
+#
+# Consumed by:  refine_index <this file>
+# Timing source: "RefineGraph finished. Cost: ..." in the stage log.
+
+index_path: <DATASET_DIR>/indexes/resgraph_search_index
+datapath: <NEW_SPACE_H5>
+index_name: hgraph
+create_params: '{"dim":<DIM>,"dtype":"float32","metric_type":"cosine","index_param":{"base_quantization_type":"fp32","graph_type":"nsw","max_degree":64,"ef_construction":400}}'
+num_threads_building: 16
+
+refine_mode: resgraph_search
+# Beam width of the per-node traversal against the new-space vectors.
+refine_search_ef: "<SEARCH_EF>"
+# Number of refinement passes over the index.
+refine_search_turns: "1"
+# Exact-prune diversification alpha for retained candidates.
+refine_alpha: "1.0"

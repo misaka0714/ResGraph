@@ -80,8 +80,8 @@ Two variants can be compared only when all of the following hold:
   edges.
 - A higher final average degree tends to raise low-EF reachability while
   lowering QPS; report degree next to every recall/QPS pair.
-- The upper graph is not neutral ground: the `drift_sign` path rebuilds it,
-  the `two_stage`/`nsw_research` paths relink and reverse-repair it. Attribute
+- The upper graph is not neutral ground: the ResGraph-Local path rebuilds
+  it, the ResGraph-Search paths relink and reverse-repair it. Attribute
   candidate-source differences only after equalizing (or at least reporting)
   degree, distance-call counts, and refine wall time.
 - Index file size is insensitive to pruned degree because `max_degree`
