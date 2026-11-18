@@ -1,0 +1,19 @@
+# Stage 1 - baseline old-space index build.
+#
+# Placeholders (replace with real paths, see experiments/README.md):
+#   <OLD_SPACE_H5>   HDF5 in the OLD embedding space (datasets:
+#                    train / test / neighbors / distances)
+#   <DATASET_DIR>    working directory for this dataset, holding
+#                    configs/ indexes/ results/ subdirectories
+#
+# Consumed by:  eval_performance <this file>
+# Timing source: "Build finished. Cost: ..." in the stage log.
+
+build_index:
+  datapath: <OLD_SPACE_H5>
+  type: build
+  index_name: hgraph
+  create_params: '{"dim":<DIM>,"dtype":"float32","metric_type":"cosine","index_param":{"base_quantization_type":"fp32","graph_type":"nsw","max_degree":64,"ef_construction":400}}'
+  index_path: <DATASET_DIR>/indexes/baseline_index
+  num_threads_building: 16
+  num_threads_searching: 16

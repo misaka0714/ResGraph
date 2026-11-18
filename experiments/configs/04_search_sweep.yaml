@@ -1,0 +1,56 @@
+# Stage 4 - recall/QPS search sweep over one index.
+#
+# One entry per ef_search value. The four entries below are the headline
+# comparison points of the protocol; extend with the fine sweep
+# (10..400 by 10, then 150/300) when a denser recall-QPS curve is needed.
+# Keep search_query_count set explicitly: without it the evaluator defaults
+# to 100000 queries and QPS becomes incomparable across runs.
+#
+# Consumed by:  eval_performance <this file>
+# Outputs: exporters "save-to-file" JSON per protocol.
+
+global:
+  exporters:
+    save-to-file:
+      format: json
+      to: file://<DATASET_DIR>/results/search_<VARIANT>.json
+
+search_ef050:
+  datapath: <NEW_SPACE_SEARCH_H5>
+  type: search
+  index_name: hgraph
+  create_params: '{"dim":<DIM>,"dtype":"float32","metric_type":"cosine","index_param":{"base_quantization_type":"fp32","graph_type":"nsw","max_degree":64,"ef_construction":400}}'
+  index_path: <DATASET_DIR>/indexes/<INDEX_TO_EVALUATE>
+  search_params: '{"hgraph": {"ef_search": 50}}'
+  search_query_count: 1000
+  num_threads_searching: 1
+
+search_ef100:
+  datapath: <NEW_SPACE_SEARCH_H5>
+  type: search
+  index_name: hgraph
+  create_params: '{"dim":<DIM>,"dtype":"float32","metric_type":"cosine","index_param":{"base_quantization_type":"fp32","graph_type":"nsw","max_degree":64,"ef_construction":400}}'
+  index_path: <DATASET_DIR>/indexes/<INDEX_TO_EVALUATE>
+  search_params: '{"hgraph": {"ef_search": 100}}'
+  search_query_count: 1000
+  num_threads_searching: 1
+
+search_ef200:
+  datapath: <NEW_SPACE_SEARCH_H5>
+  type: search
+  index_name: hgraph
+  create_params: '{"dim":<DIM>,"dtype":"float32","metric_type":"cosine","index_param":{"base_quantization_type":"fp32","graph_type":"nsw","max_degree":64,"ef_construction":400}}'
+  index_path: <DATASET_DIR>/indexes/<INDEX_TO_EVALUATE>
+  search_params: '{"hgraph": {"ef_search": 200}}'
+  search_query_count: 1000
+  num_threads_searching: 1
+
+search_ef400:
+  datapath: <NEW_SPACE_SEARCH_H5>
+  type: search
+  index_name: hgraph
+  create_params: '{"dim":<DIM>,"dtype":"float32","metric_type":"cosine","index_param":{"base_quantization_type":"fp32","graph_type":"nsw","max_degree":64,"ef_construction":400}}'
+  index_path: <DATASET_DIR>/indexes/<INDEX_TO_EVALUATE>
+  search_params: '{"hgraph": {"ef_search": 400}}'
+  search_query_count: 1000
+  num_threads_searching: 1
