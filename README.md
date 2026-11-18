@@ -157,9 +157,8 @@ nlohmann/json) and for dataset preparation (PyTorch, transformers,
 
 The paper measurements run ResGraph inside the
 [vsag](https://github.com/antgroup/vsag) vector-search system as an
-index-level refine operation. The integration points and the refine modes —
-`drift_sign` for the ResGraph-Local candidate pipeline, `nsw_research` /
-`two_stage` for the search-side chain — are documented in
+index-level refine operation. The two migration modes — ResGraph-Local and
+ResGraph-Search — and their knobs are documented in
 [docs/vsag-integration.md](docs/vsag-integration.md).
 
 The shared measurement protocol (build/search parameters, the three timing
@@ -170,10 +169,10 @@ clocks, comparison constraints) and stage-wise config templates live under
 export BIN=<vsag-tree>/build-release/tools/eval
 
 $BIN/eval_performance work/<dataset>/configs/01_build_baseline.yaml   # old-space index
-$BIN/refine_index     work/<dataset>/configs/03_refine_drift_sign.yaml # ResGraph-Local
-$BIN/refine_index     work/<dataset>/configs/05_refine_nsw_research.yaml  # optional chain
-$BIN/eval_performance work/<dataset>/configs/04_search_sweep.yaml      # recall/QPS
-```
+$BIN/eval_performance work/<dataset>/configs/01_build_baseline.yaml       # old-space index
+$BIN/refine_index     work/<dataset>/configs/03_refine_resgraph_local.yaml # ResGraph-Local
+$BIN/refine_index     work/<dataset>/configs/05_refine_resgraph_search.yaml # optional chain
+$BIN/eval_performance work/<dataset>/configs/04_search_sweep.yaml          # recall/QPS
 
 See [experiments/README.md](experiments/README.md) for placeholder
 instantiation, per-stage log checks, and the runbook.

@@ -33,7 +33,7 @@ vector-search library. Building that host tree additionally requires:
 | CMake | >= 3.18 | vsag top-level `CMakeLists.txt` requirement |
 | C++ compiler | C++17 | same toolchain class as above |
 | HDF5 | C library + C++ bindings (`H5Cpp.h`) | experiment datasets/matrices are passed around as HDF5 files |
-| yaml-cpp | any recent release | experiment configs are YAML; the eval tools translate them into `VSAG_REFINE_*` environment variables |
+| yaml-cpp | any recent release | stage configs are plain YAML files |
 | nlohmann/json | any recent release | machine-readable result summaries |
 
 See [vsag-integration.md](vsag-integration.md) for how these pieces connect,
