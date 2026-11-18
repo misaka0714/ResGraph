@@ -145,16 +145,51 @@ Run the small in-memory example with:
 ./build/resgraph_minimal
 ```
 
+## Dependencies
+
+The library itself needs only CMake >= 3.16, a C++17 compiler (GCC >= 9 or
+Clang >= 10), and POSIX threads — no third-party runtime dependency. The
+toolchain for the paper experiments (vsag host tree, HDF5, yaml-cpp,
+nlohmann/json) and for dataset preparation (PyTorch, transformers,
+`datasets`, h5py) is tabulated in [docs/environment.md](docs/environment.md).
+
+## Host Integration and Paper Experiments
+
+The paper measurements run ResGraph inside the
+[vsag](https://github.com/antgroup/vsag) vector-search system as an
+index-level refine operation. The integration points and the refine modes —
+`drift_sign` for the ResGraph-Local candidate pipeline, `nsw_research` /
+`two_stage` for the search-side chain — are documented in
+[docs/vsag-integration.md](docs/vsag-integration.md).
+
+The shared measurement protocol (build/search parameters, the three timing
+clocks, comparison constraints) and stage-wise config templates live under
+[experiments/](experiments/). The gist of one end-to-end pass:
+
+```bash
+export BIN=<vsag-tree>/build-release/tools/eval
+
+$BIN/eval_performance work/<dataset>/configs/01_build_baseline.yaml   # old-space index
+$BIN/refine_index     work/<dataset>/configs/03_refine_drift_sign.yaml # ResGraph-Local
+$BIN/refine_index     work/<dataset>/configs/05_refine_nsw_research.yaml  # optional chain
+$BIN/eval_performance work/<dataset>/configs/04_search_sweep.yaml      # recall/QPS
+```
+
+See [experiments/README.md](experiments/README.md) for placeholder
+instantiation, per-stage log checks, and the runbook.
+
 ## Layout
 
 ```text
-include/resgraph/              Public API
-src/local_migration.cpp   ResGraph-Local
-src/search_migration.cpp  ResGraph-Search
-src/packed_signatures.cpp Packed sign screening
+include/resgraph/          Public API
+src/local_migration.cpp    ResGraph-Local
+src/search_migration.cpp   ResGraph-Search
+src/packed_signatures.cpp  Packed sign screening
 src/neighbor_selection.cpp Exact diversity-aware selection
-examples/minimal.cpp      In-memory integration example
-tests/resgraph_test.cpp        Algorithm and API tests
+examples/minimal.cpp       In-memory integration example
+tests/resgraph_test.cpp    Algorithm and API tests
+docs/                      Environment and vsag integration guides
+experiments/               Protocol, config templates, and runbook
 ```
 
 ## License
